@@ -43,57 +43,7 @@ menor::Int->Int->Int
 menor a b
   | (a<b) = a
   | otherwise = b  
-
--- Resolva as questões usando o Hugs:
--- 1) Implemente uma função que retorna a lista com os valores das vendas durante o período
--- Ex: para a função vendas atual, sua função deverá retornar [41, 55, 91, 2, 41, 72, 41]
-
-
--- 2) Implemente uma função que retorna uma lista com os dias que venderam uma quantidade definida
--- Ex: se a função receber 41, deverá retornar [7, 3, 1]
-
-
--- 3) Implemente uma função que retorne uma lista de dias que apresentaram vendas superiores a um valor
--- Ex: se a função receber 50, deverá retornar [6, 5, 2]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
 -- retorna maior venda, mas depende de parâmetro
 maiorv::Int->Int
@@ -121,5 +71,22 @@ diavenda::Int->Int
 diavenda x = diav periodo x
 
 diamaiorvenda = diavenda maiorvenda
+  
+  
+-- Resolva as questões usando o Hugs:
+-- 1) Implemente uma função que retorna a lista com os valores das vendas durante o período
+-- Ex: para a função vendas atual, sua função deverá retornar [41, 55, 91, 2, 41, 72, 41]
+listaVendas::(Int->Int)->[Int]
+listaVendas vendas 1 = vendas 1
+listaVendas f = f ++ listaVendas vendas (periodo-1)
+
+-- 2) Implemente uma função que retorna uma lista com os dias que venderam uma quantidade definida
+-- Ex: se a função receber 41, deverá retornar [7, 3, 1]
+
+
+-- 3) Implemente uma função que retorne uma lista de dias que apresentaram vendas superiores a um valor
+-- Ex: se a função receber 50, deverá retornar [6, 5, 2]
+
+
 
 
