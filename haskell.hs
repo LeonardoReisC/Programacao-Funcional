@@ -19,14 +19,14 @@ vendas 7 = 41
 vendas _ = 0
 
 vendaRelevante2 :: (Int->Int->Bool) -> Dia -> VendaR -> Int
-vendaRelevante2  _  0  vendaR = vendaR
-vendaRelevante2 f dia vendaR 
+vendaRelevante2           _             0     vendaR = vendaR
+vendaRelevante2           f            dia    vendaR 
    | f vendaR (vendas dia)  = vendaRelevante2 f (dia-1) vendaR
    | otherwise = vendaRelevante2 f (dia-1) (vendas dia) 
 
 vendaRelevante :: (Int->Int->Int) -> Dia -> VendaR -> Int
-vendaRelevante _  0  vendaR = vendaR
-vendaRelevante f dia vendaR = vendaRelevante f (dia-1) (f vendaR (vendas dia))
+vendaRelevante           _            0     vendaR = vendaR
+vendaRelevante           f           dia    vendaR = vendaRelevante f (dia-1) (f vendaR (vendas dia))
 
 -- função interface usuario para vendaRelevante 
 vendaRmm :: (Int->Int->Int)->Int
@@ -34,26 +34,26 @@ vendaRmm f = vendaRelevante f periodo (vendas periodo)
 
 -- função auxiliar maior
 maior::Int->Int->Int
-maior a b
+maior   a    b
   | (a>b) = a
   | otherwise = b
   
 -- função auxiliar menor
 menor::Int->Int->Int
-menor a b
+menor   a    b
   | (a<b) = a
   | otherwise = b  
   
 
 -- retorna maior venda, mas depende de parâmetro
 maiorv::Int->Int
-maiorv 0   = vendas 0
-maiorv dia = maior (vendas dia) (maiorv (dia-1))
+maiorv   0 = vendas 0
+maiorv  dia = maior (vendas dia) (maiorv (dia-1))
 
 -- avançado (apenas teste)
 maiorMenorv::(Int->Int->Int)->Int->Int
-maiorMenorv  _ 0 = vendas 0
-maiorMenorv  f dia = f (vendas dia) (maiorv (dia-1))
+maiorMenorv         _          0 = vendas 0
+maiorMenorv         f         dia = f (vendas dia) (maiorv (dia-1))
 
 -- retorna maior venda
 maiorvenda = maiorv periodo
@@ -61,32 +61,48 @@ maiorvenda = maiorv periodo
 -- retorna o dia de certa venda, mas depende de parâmetro
 
 diav :: Int -> Int -> Int
-diav    (-1) _ = (-1)
-diav    i  v
+diav   (-1)     _  = (-1)
+diav     i      v
   | (vendas i) == v = i
   | otherwise = diav (i-1) v
 
 -- dia de certa venda
 diavenda::Int->Int
-diavenda x = diav periodo x
+diavenda   x = diav periodo x
 
 diamaiorvenda = diavenda maiorvenda
-  
-  
+
+
+
 -- Resolva as questões usando o Hugs:
 -- 1) Implemente uma função que retorna a lista com os valores das vendas durante o período
 -- Ex: para a função vendas atual, sua função deverá retornar [41, 55, 91, 2, 41, 72, 41]
-listaVendas::(Int->Int)->[Int]
-listaVendas vendas 1 = vendas 1
-listaVendas f = f ++ listaVendas vendas (periodo-1)
+
+enumVendas::(Int->Int)->Int->[Int]
+enumVendas       _       0  = []
+enumVendas       f      dia = [f (dia)] ++ enumVendas f (dia-1)
+
+enumVendasPeriodo:: Int->[Int]
+enumVendasPeriodo   dia = enumVendas (vendas) (dia)
 
 -- 2) Implemente uma função que retorna uma lista com os dias que venderam uma quantidade definida
 -- Ex: se a função receber 41, deverá retornar [7, 3, 1]
+listaDias::(Int->Int->Bool)->VendaR->Dia->[Int]
+listaDias         _             _      0  = []
+listaDias         f          vendaR   dia
+  | f vendaR dia = [dia] ++ listaDias f vendaR (dia-1)
+  | otherwise = listaDias f vendaR (dia-1)
 
+diaDeUmaVenda::VendaR->Dia->Bool
+diaDeUmaVenda  vendaR  dia  
+  | vendaR == vendas dia = True
+  | otherwise = False
 
 -- 3) Implemente uma função que retorne uma lista de dias que apresentaram vendas superiores a um valor
--- Ex: se a função receber 50, deverá retornar [6, 5, 2]
+-- Ex: se a função receber 50, deverá retornar [6, 5, 2]´
 
-
-
-
+--função parâmetro para a função desenvolvida na atividade 2(listaDias)
+valorMaiorQueDiaVenda::VendaR->Dia->Bool
+valorMaiorQueDiaVenda  vendaR  dia  
+  | vendaR < vendas dia = True
+  | otherwise = False
